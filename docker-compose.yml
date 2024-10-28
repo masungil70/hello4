@@ -1,0 +1,40 @@
+version: '3'
+
+services:
+  redis:
+    image: redis:latest
+    ports:
+      - 6379:6379
+    container_name: redis-server
+    networks:
+      - my_bridge_network
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - 80:80
+    container_name: web-server
+    volumes:
+      - /etc/nginx:/etc/nginx
+    depends_on:
+      - redis
+      - was1
+      - was2  
+    networks:
+      - my_bridge_network
+
+  was1:
+    image: masungil/hello4:0.0.1
+    container_name: was1
+    networks:
+      - my_bridge_network
+
+  was2:
+    image: masungil/hello4:0.0.1
+    container_name: was2
+    networks:
+      - my_bridge_network
+
+networks:
+  my_bridge_network:
+    driver: bridge 
